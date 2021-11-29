@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.details.mapper.ZlDetailsMapper">
+    
+    <resultMap type="ZlDetails" id="ZlDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="lxId"    column="lx_id"    />
+        <result property="lxName"    column="lx_name"    />
+        <result property="title"    column="title"    />
+        <result property="zlUrl"    column="zl_url"    />
+        <result property="zlDesc"    column="zl_desc"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectZlDetailsVo">
+        select id, lx_id, lx_name, title, zl_url, zl_desc, create_time, update_time from zl_details
+    </sql>
+
+    <select id="selectZlDetailsList" parameterType="ZlDetails" resultMap="ZlDetailsResult">
+        <include refid="selectZlDetailsVo"/>
+        <where>  
+            <if test="lxId != null "> and lx_id = #{lxId}</if>
+            <if test="lxName != null  and lxName != ''"> and lx_name like concat('%', #{lxName}, '%')</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="zlUrl != null  and zlUrl != ''"> and zl_url = #{zlUrl}</if>
+            <if test="zlDesc != null  and zlDesc != ''"> and zl_desc = #{zlDesc}</if>
+        </where>
+    </select>
+    
+    <select id="selectZlDetailsById" parameterType="Long" resultMap="ZlDetailsResult">
+        <include refid="selectZlDetailsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZlDetails" parameterType="ZlDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into zl_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lxId != null">lx_id,</if>
+            <if test="lxName != null">lx_name,</if>
+            <if test="title != null">title,</if>
+            <if test="zlUrl != null">zl_url,</if>
+            <if test="zlDesc != null">zl_desc,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lxId != null">#{lxId},</if>
+            <if test="lxName != null">#{lxName},</if>
+            <if test="title != null">#{title},</if>
+            <if test="zlUrl != null">#{zlUrl},</if>
+            <if test="zlDesc != null">#{zlDesc},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZlDetails" parameterType="ZlDetails">
+        update zl_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lxId != null">lx_id = #{lxId},</if>
+            <if test="lxName != null">lx_name = #{lxName},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="zlUrl != null">zl_url = #{zlUrl},</if>
+            <if test="zlDesc != null">zl_desc = #{zlDesc},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZlDetailsById" parameterType="Long">
+        delete from zl_details where id = #{id}
+    </delete>
+
+    <delete id="deleteZlDetailsByIds" parameterType="String">
+        delete from zl_details where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

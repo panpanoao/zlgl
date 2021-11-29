@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.type.mapper.ZlTypeMapper">
+    
+    <resultMap type="ZlType" id="ZlTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectZlTypeVo">
+        select id, name from zl_type
+    </sql>
+
+    <select id="selectZlTypeList" parameterType="ZlType" resultMap="ZlTypeResult">
+        <include refid="selectZlTypeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectZlTypeById" parameterType="Long" resultMap="ZlTypeResult">
+        <include refid="selectZlTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZlType" parameterType="ZlType" useGeneratedKeys="true" keyProperty="id">
+        insert into zl_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZlType" parameterType="ZlType">
+        update zl_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZlTypeById" parameterType="Long">
+        delete from zl_type where id = #{id}
+    </delete>
+
+    <delete id="deleteZlTypeByIds" parameterType="String">
+        delete from zl_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
